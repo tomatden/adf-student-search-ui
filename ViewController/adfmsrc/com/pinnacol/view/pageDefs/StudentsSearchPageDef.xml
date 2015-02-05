@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pageDefinition xmlns="http://xmlns.oracle.com/adfm/uimodel" version="12.1.3.2.36" id="StudentsSearchPageDef"
+                Package="com.pinnacol.view.pageDefs">
+  <parameters/>
+  <executables>
+    <iterator Binds="root" RangeSize="25" DataControl="StudentCourseVwClient" id="StudentCourseVwClientIterator"/>
+    <accessorIterator MasterBinding="StudentCourseVwClientIterator" Binds="studentsForCourse" RangeSize="25"
+                      DataControl="StudentCourseVwClient" BeanClass="com.pinnacol.model.StudentCourseVw"
+                      id="studentsForCourseIterator"/>
+    <variableIterator id="variables">
+      <variable Type="java.math.BigDecimal" Name="ExecuteWithParams_courseId" IsQueriable="false"/>
+    </variableIterator>
+    <iterator Binds="root" RangeSize="25" DataControl="CourseClient" id="CourseClientIterator"/>
+    <accessorIterator MasterBinding="CourseClientIterator" Binds="courseList" RangeSize="25" DataControl="CourseClient"
+                      BeanClass="com.pinnacol.model.Course" id="courseListIterator"/>
+  </executables>
+  <bindings>
+    <action IterBinding="studentsForCourseIterator" id="ExecuteWithParams" RequiresUpdateModel="true"
+            Action="executeWithParams">
+      <NamedData NDName="courseId" NDType="java.math.BigDecimal" NDValue="${bindings.ExecuteWithParams_courseId}"/>
+    </action>
+    <attributeValues IterBinding="variables" id="courseId">
+      <AttrNames>
+        <Item Value="ExecuteWithParams_courseId"/>
+      </AttrNames>
+    </attributeValues>
+    <tree IterBinding="studentsForCourseIterator" id="studentsForCourse">
+      <nodeDefinition DefName="com.pinnacol.model.StudentCourseVw" Name="studentsForCourse0">
+        <AttrNames>
+          <Item Value="name"/>
+          <Item Value="studentId"/>
+        </AttrNames>
+      </nodeDefinition>
+    </tree>
+    <list IterBinding="courseListIterator" ListOperMode="navigation" ListIter="courseListIterator" id="courseList"
+          DTSupportsMRU="false" SelectItemValueMode="ListObject">
+      <AttrNames>
+        <Item Value="name"/>
+        <Item Value="id"/>
+      </AttrNames>
+    </list>
+  </bindings>
+</pageDefinition>
